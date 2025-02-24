@@ -1,3 +1,5 @@
+version: '3.8'
+
 volumes:
   n8n_storage:
   postgres_storage:
@@ -22,6 +24,10 @@ x-n8n: &service-n8n
     - N8N_USER_MANAGEMENT_JWT_SECRET=${N8N_USER_MANAGEMENT_JWT_SECRET}
     - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
     - OLLAMA_HOST=host.docker.internal:11434
+    - N8N_ENDPOINT=/n8n/  # <-- Ensure it works with Nginx subdirectory
+    - N8N_PROTOCOL=https  # <-- Match your Plesk domain settings
+    - N8N_HOST=protomota.com  # <-- Replace with your domain
+    - WEBHOOK_URL=https://protomota.com/n8n/  # <-- For webhook support
 
 x-ollama: &service-ollama
   image: ollama/ollama:latest
