@@ -69,10 +69,19 @@ services:
     <<: *service-n8n
     hostname: n8n-import
     container_name: n8n-import
+    environment:
+      - N8N_EMAIL=admin@example.com
+      - N8N_PASSWORD=password
+      - N8N_FIRST_NAME=admin
+      - N8N_LAST_NAME=admin
     entrypoint: /bin/sh
     command:
       - "-c"
-      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
+      - |
+        n8n start --setup &
+        sleep 10 &&
+        n8n import:credentials --separate --input=/backup/credentials &&
+        n8n import:workflow --separate --input=/backup/workflows
     volumes:
       - ./n8n/backup:/backup
     depends_on:
