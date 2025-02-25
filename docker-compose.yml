@@ -23,10 +23,6 @@ x-n8n: &service-n8n
     - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
     - N8N_USER_MANAGEMENT_JWT_SECRET=${N8N_USER_MANAGEMENT_JWT_SECRET}
     - OLLAMA_HOST=host.docker.internal:11434
-    - N8N_ENDPOINT=/n8n/  # <-- Ensure it works with Nginx subdirectory
-    - N8N_PROTOCOL=https  # <-- Match your Plesk domain settings
-    - N8N_HOST=protomota.com  # <-- Replace with your domain
-    - WEBHOOK_URL=https://protomota.com/n8n/  # <-- For webhook support
 
 x-ollama: &service-ollama
   image: ollama/ollama:latest
@@ -82,7 +78,12 @@ services:
     entrypoint: /bin/sh
     command:
       - "-c"
-      - "n8n import:credentials --separate --input=/backup/credentials --skipOwnership=true && n8n import:workflow --separate --input=/backup/workflows"
+      - |
+        n8n start &
+        sleep 10
+        n8n import:workflow --separate --input=/backup/workflows || true
+        n8n import:credentials --separate --input=/backup/credentials || true
+        exit 0
     volumes:
       - ./n8n/backup:/backup
     depends_on:
