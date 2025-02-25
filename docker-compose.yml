@@ -82,15 +82,7 @@ services:
     entrypoint: /bin/sh
     command:
       - "-c"
-<<<<<<< HEAD
-      - |
-        n8n start --setup &
-        sleep 10 &&
-        n8n import:credentials --separate --input=/backup/credentials &&
-        n8n import:workflow --separate --input=/backup/workflows
-=======
       - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
->>>>>>> parent of 5a9d754 (chore: Add skipOwnership flag to N8N import command)
     volumes:
       - ./n8n/backup:/backup
     depends_on:
