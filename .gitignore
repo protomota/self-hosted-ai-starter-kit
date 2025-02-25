@@ -1,2 +1,5 @@
 .env
 *.env.*
+n8n/
+.DS_Store
+
